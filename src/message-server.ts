@@ -10,9 +10,10 @@ export abstract class MessageServer<T> {
 
   protected readonly subscribeToMessages = (ws: WebSocket): void => {
     ws.on("message", (data: WebSocket.Data) => {
-      if (typeof data === "string") {
-        this.handleMessage(ws, JSON.parse(data));
+      if (typeof data.toString() === 'string') {
+        this.handleMessage(ws, JSON.parse(data.toString()));
       } else {
+        console.log(data.toString())
         console.log("Received data of unsupported type.");
       }
     });
