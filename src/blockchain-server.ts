@@ -13,7 +13,19 @@ export class BlockchainServer extends MessageServer<Message> {
   private readonly sentMessagesAwaitingReply = new Map<UUID, Replies>();
 
   protected handleMessage(sender: WebSocket, message: Message): void {
-    throw new Error("Method not implemented.");
+    switch (message.type) {
+      case MessageTypes.LONGEST_CHAIN_REQUEST:
+        return this.handleLongestChainRequest(sender, message);
+      case MessageTypes.LONGEST_CHAIN_RESPONSE:
+        return this.handleLongestChainResponse(sender, message);
+      case MessageTypes.NEW_BLOCK_REQUEST:
+        return this.handleAddTransactionsRequest(sender, message);
+      case MessageTypes.NEW_BLOCK_ANNOUNCEMENT:
+        return this.handleNewBlockAnnouncement(sender, message);
+      default: {
+        console.log(`Received message of unknown type: "${message.type}"`);
+      }
+    }
   }
 
   private handleLongestChainRequest(
